@@ -68,15 +68,6 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E2E665FCD1DB440987EC0A1A8BA4489A }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3C40BFA4706A40A2ABBBC851C32B84FD }}
 
-      - name: Configure Python build
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az webapp config appsettings set \
-              --resource-group "PushpThreads_group" \
-              --name "PushpThreadAPIsAPI" \
-              --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true PORT=8000
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
