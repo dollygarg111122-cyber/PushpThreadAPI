@@ -1,0 +1,63 @@
+name: Deploy PushpThreadsAPI to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  RESOURCE_GROUP: pushpthreads-rg
+  ACR_NAME: pushpthreadsacr
+  APP_NAME: pushpthreads-api
+  IMAGE_NAME: pushpthreads-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build image in Azure Container Registry
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            IMAGE_TAG="${{ github.sha }}"
+            az acr build \
+              --registry "$ACR_NAME" \
+              --image "$IMAGE_NAME:$IMAGE_TAG" \
+              .
+
+      - name: Configure App Service container
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            IMAGE_TAG="${{ github.sha }}"
+            az webapp config container set \
+              --resource-group "$RESOURCE_GROUP" \
+              --name "$APP_NAME" \
+              --docker-custom-image-name "$ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG" \
+              --docker-registry-server-url "https://$ACR_NAME.azurecr.io"
+            az webapp config appsettings set \
+              --resource-group "$RESOURCE_GROUP" \
+              --name "$APP_NAME" \
+              --settings WEBSITES_PORT=8000
+            az webapp restart \
+              --resource-group "$RESOURCE_GROUP" \
+              --name "$APP_NAME"
+
+      - name: Check deployment health
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            echo "Deployment completed for commit ${{ github.sha }}"
+            echo "Health URL: https://$APP_NAME.azurewebsites.net/health"
