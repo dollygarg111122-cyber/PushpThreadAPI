@@ -9,9 +9,9 @@ permissions:
   contents: read
 
 env:
-  RESOURCE_GROUP: pushpthreads-rg
+  RESOURCE_GROUP: PushpThreads_group
   ACR_NAME: pushpthreadsacr
-  APP_NAME: pushpthreads-api
+  APP_NAME: pushpthreadapisapi
   IMAGE_NAME: pushpthreads-api
 
 jobs:
