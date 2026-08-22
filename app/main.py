@@ -6,6 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.routes import router
@@ -39,6 +40,18 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         exc.errors(),
     )
     return JSONResponse(status_code=422, content={"detail": jsonable_encoder(exc.errors())})
+
+
+@app.exception_handler(SQLAlchemyError)
+async def database_exception_handler(request: Request, exc: SQLAlchemyError):
+    logger.exception("Database API error: %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=503,
+        content={
+            "detail": "Database unavailable. Verify DB_SERVER, DB_NAME, DB_USER, "
+            "DB_PASSWORD, and database permissions.",
+        },
+    )
 
 
 @app.exception_handler(Exception)
