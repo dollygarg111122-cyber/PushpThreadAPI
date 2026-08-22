@@ -14,7 +14,7 @@ from app.telemetry import configure_telemetry
 
 settings = get_settings()
 configure_telemetry(settings.applicationinsights_connection_string)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app")
 app = FastAPI(title=settings.app_name, version="0.1.0")
 
 
