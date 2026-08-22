@@ -74,6 +74,7 @@ az webapp identity assign --resource-group $group --name $app
 az webapp config appsettings set --resource-group $group --name $app --settings `
   APP_NAME=PushpThreadsAPI `
   API_PREFIX=/api/v1 `
+  APPLICATIONINSIGHTS_CONNECTION_STRING="<Application Insights connection string>" `
   DB_PORT=1433 `
   DB_SERVER="@Microsoft.KeyVault(VaultName=$keyVault;SecretName=Db--Server)" `
   DB_NAME="@Microsoft.KeyVault(VaultName=$keyVault;SecretName=Db--Name)" `

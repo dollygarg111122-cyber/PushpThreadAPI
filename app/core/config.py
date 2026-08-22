@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     app_name: str = "PushpThreadsAPI"
     app_env: str = "development"
     api_prefix: str = "/api/v1"
+    applicationinsights_connection_string: str | None = None
 
     db_server: str = "localhost"
     db_port: int = 1433

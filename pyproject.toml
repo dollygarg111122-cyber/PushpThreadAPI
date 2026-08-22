@@ -9,6 +9,7 @@ dependencies = [
     "sqlalchemy>=2.0,<3.0",
     "pyodbc>=5.1,<6.0",
     "pydantic-settings>=2.6,<3.0",
+    "azure-monitor-opentelemetry>=1.8,<2.0",
 ]
 
 [project.optional-dependencies]

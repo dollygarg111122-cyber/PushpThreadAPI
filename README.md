@@ -23,6 +23,7 @@ pip install -e ".[dev]"
 ```
 
 3. Copy `.env.example` to `.env` and update the SQL Server settings.
+	Set `APPLICATIONINSIGHTS_CONNECTION_STRING` to the Azure Application Insights connection string to enable request and error telemetry. Keep this value in environment variables or App Service settings; do not commit it.
 4. Start the API:
 
 ```powershell
